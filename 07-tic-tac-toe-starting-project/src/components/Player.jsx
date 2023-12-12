@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Player({ name, symbol }) {
+export default function Player({ name, symbol, isActive }) {
   const [editbtn, setEditbtn] = useState(false);
   const [usrName, setUsrName] = useState(name);
   const handleEdit = () => {
@@ -14,7 +14,7 @@ export default function Player({ name, symbol }) {
     setUsrName(event.target.value);
   };
   let inputTag = (
-    <li>
+    <li className={isActive ? 'active' : undefined}>
       <span className='player'>
         <span className='player-name'>{usrName}</span>
         <span className='player-symbol'> {symbol}</span>
@@ -24,7 +24,7 @@ export default function Player({ name, symbol }) {
   );
   if (editbtn) {
     inputTag = (
-      <li>
+      <li className={isActive ? 'active' : undefined}>
         <span className='player'>
           <input type='text' value={usrName} onChange={handleUsrName} />
           {/* <span className='player-name'>{name}</span> */}
