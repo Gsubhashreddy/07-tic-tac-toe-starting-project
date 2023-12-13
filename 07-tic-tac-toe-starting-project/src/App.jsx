@@ -14,8 +14,9 @@ const initialGameBoard = [
 function App() {
   const [activePlayer, setActivePlayer] = useState('X');
   const [gameTurns, setGameTurns] = useState([]);
-  let gameBoard = initialGameBoard;
+  let gameBoard = [...initialGameBoard.map((innerArray) => [...innerArray])];
   let winner = null;
+  const draw = gameTurns.length === 9 && winner === null;
 
   for (const turn of gameTurns) {
     const { square, player } = turn;
@@ -34,6 +35,10 @@ function App() {
     ) {
       winner = firstSquare;
     }
+  }
+
+  function handleRematch() {
+    setGameTurns([]);
   }
 
   const handleActivePlayer = (rowIndex, colIndex) => {
@@ -65,7 +70,9 @@ function App() {
             isActive={activePlayer === 'O' ? true : false}
           />
         </ol>
-        {winner && <GameOver winner={winner} />}
+        {(winner || draw) && (
+          <GameOver winner={winner} onSelectRematch={handleRematch} />
+        )}
         <GameBoard board={gameBoard} onSelectPlayer={handleActivePlayer} />
       </div>
       <Logs turns={gameTurns} />
