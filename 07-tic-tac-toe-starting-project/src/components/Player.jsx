@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Player({ name, symbol, isActive }) {
+export default function Player({ name, symbol, isActive, onPlayerChange }) {
   const [editbtn, setEditbtn] = useState(false);
   const [usrName, setUsrName] = useState(name);
   const handleEdit = () => {
@@ -8,6 +8,7 @@ export default function Player({ name, symbol, isActive }) {
   };
   const handleSave = () => {
     setEditbtn(false);
+    onPlayerChange(symbol, usrName);
     console.log('Saving the Info :', usrName);
   };
   const handleUsrName = (event) => {

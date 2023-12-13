@@ -11,12 +11,30 @@ const initialGameBoard = [
   [null, null, null],
 ];
 
+function derivedActivePlayer(gameTurns) {
+  let currPlayer = 'X';
+  if (gameTurns.length > 0 && gameTurns[0].player === 'X') {
+    currPlayer = 'O';
+  }
+  return currPlayer;
+}
 function App() {
-  const [activePlayer, setActivePlayer] = useState('X');
+  // const [activePlayer, setActivePlayer] = useState('X');
   const [gameTurns, setGameTurns] = useState([]);
+  const activePlayer = derivedActivePlayer(gameTurns);
   let gameBoard = [...initialGameBoard.map((innerArray) => [...innerArray])];
   let winner = null;
   const draw = gameTurns.length === 9 && winner === null;
+  const [currPlayerNames, setPlayerNames] = useState({
+    X: 'Player1',
+    0: 'Player 2',
+  });
+
+  const handlePlayerName = (symbol, playerName) => {
+    setPlayerNames((prevState) => {
+      return { ...prevState, [symbol]: playerName };
+    });
+  };
 
   for (const turn of gameTurns) {
     const { square, player } = turn;
@@ -33,7 +51,7 @@ function App() {
       firstSquare === secondSquare &&
       firstSquare === thirdSquare
     ) {
-      winner = firstSquare;
+      winner = currPlayerNames[firstSquare];
     }
   }
 
@@ -42,12 +60,9 @@ function App() {
   }
 
   const handleActivePlayer = (rowIndex, colIndex) => {
-    setActivePlayer((prevPlayer) => (prevPlayer === 'X' ? 'O' : 'X'));
+    // setActivePlayer((prevPlayer) => (prevPlayer === 'X' ? 'O' : 'X'));
     setGameTurns((prevTurns) => {
-      let currPlayer = 'X';
-      if (prevTurns.length > 0 && prevTurns[0].player === 'X') {
-        currPlayer = 'O';
-      }
+      const currPlayer = derivedActivePlayer(prevTurns);
       const updateTurns = [
         { square: { row: rowIndex, col: colIndex }, player: currPlayer },
         ...prevTurns,
@@ -63,11 +78,13 @@ function App() {
             name='Player 1'
             symbol='X'
             isActive={activePlayer === 'X' ? true : false}
+            onPlayerChange={handlePlayerName}
           />
           <Player
             name='Player 2'
             symbol='O'
             isActive={activePlayer === 'O' ? true : false}
+            onPlayerChange={handlePlayerName}
           />
         </ol>
         {(winner || draw) && (
